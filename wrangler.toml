@@ -5,4 +5,4 @@ pages_build_output_dir = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "oscilloscope-counter"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "0bf8c3b2-5a9e-4b33-961f-0294b43f454b"
