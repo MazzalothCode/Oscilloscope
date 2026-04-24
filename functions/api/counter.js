@@ -31,11 +31,13 @@ export async function onRequestGet(context) {
       count: Number(result?.count || 0),
     });
   } catch (error) {
+    console.error("counter GET failed", error);
     return json(
       {
         ok: false,
         count: 0,
         error: "Failed to read the shared download counter.",
+        details: String(error?.message || error),
       },
       500
     );
@@ -73,11 +75,13 @@ export async function onRequestPost(context) {
       count: Number(result?.count || 0),
     });
   } catch (error) {
+    console.error("counter POST failed", error);
     return json(
       {
         ok: false,
         count: 0,
         error: "Failed to update the shared download counter.",
+        details: String(error?.message || error),
       },
       500
     );
