@@ -89,13 +89,19 @@ export async function onRequestPost(context) {
 }
 
 async function ensureCounterRow(database) {
-  await database.exec(`
-    CREATE TABLE IF NOT EXISTS download_counter (
-      id INTEGER PRIMARY KEY CHECK (id = 1),
-      count INTEGER NOT NULL DEFAULT 0
-    );
-    INSERT OR IGNORE INTO download_counter (id, count) VALUES (1, 0);
-  `);
+  await database
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS download_counter (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        count INTEGER NOT NULL DEFAULT 0
+      )`
+    )
+    .run();
+
+  await database
+    .prepare("INSERT OR IGNORE INTO download_counter (id, count) VALUES (?, ?)")
+    .bind(COUNTER_ID, 0)
+    .run();
 }
 
 function json(payload, status = 200) {
