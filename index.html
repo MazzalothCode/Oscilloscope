@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oscilloscope</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <input id="imageInput" class="file-input" type="file" accept="image/png,image/jpeg,image/webp" />
+
+      <section id="deviceFrame" class="device-frame">
+        <svg id="patchLayer" class="patch-layer" viewBox="0 0 800 800" preserveAspectRatio="none" aria-hidden="true">
+          <path id="effectCable" class="effect-cable" d="" />
+        </svg>
+
+        <section class="module input-module">
+          <div id="cropScreen" class="screen-shell lcd-screen">
+            <div class="screen-surface lcd-surface">
+              <canvas id="cropCanvas" width="600" height="600" aria-label="Crop canvas"></canvas>
+              <span id="inputPlaceholder" class="screen-placeholder"
+                ><span class="placeholder-copy">Input your image here</span><span class="placeholder-caret">_</span></span
+              >
+            </div>
+            <img class="screen-frame frame-lcd" src="./assets/ui/screen-lcd-frame.svg" alt="" aria-hidden="true" />
+          </div>
+
+          <div class="zoom-row">
+            <span class="mini-label">ZOOM</span>
+            <div class="zoom-slider-shell">
+              <img class="zoom-track-art" src="./assets/ui/slider-horizontal.svg" alt="" aria-hidden="true" />
+              <input id="zoomControl" type="range" min="100" max="500" step="1" value="100" disabled />
+            </div>
+            <button id="uploadButton" class="svg-button svg-button-rect" type="button">
+              <img class="svg-button-shell default-shell" src="./assets/ui/button-rect.svg" alt="" aria-hidden="true" />
+              <img class="svg-button-shell active-shell" src="./assets/ui/button-rect-onclick.svg" alt="" aria-hidden="true" />
+              <span class="svg-button-label">UPLOAD</span>
+            </button>
+            <output id="zoomValue" class="visually-hidden">100%</output>
+          </div>
+        </section>
+
+        <section class="module controls-module">
+          <section class="settings knob-grid">
+            <div class="setting knob-setting">
+              <label for="lineCount">Count</label>
+              <button class="knob" type="button" data-knob-for="lineCount" aria-label="Adjust line count">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="lineCount" class="native-range" data-setting="lineCount" type="range" min="32" max="180" step="1" value="82" />
+              <output id="lineCountValue" class="visually-hidden">82</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="amplitude">Amplitude</label>
+              <button class="knob" type="button" data-knob-for="amplitude" aria-label="Adjust amplitude">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="amplitude" class="native-range" data-setting="amplitude" type="range" min="6" max="120" step="1" value="46" />
+              <output id="amplitudeValue" class="visually-hidden">46</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="smoothness">Smoothness</label>
+              <button class="knob" type="button" data-knob-for="smoothness" aria-label="Adjust smoothness">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="smoothness" class="native-range" data-setting="smoothness" type="range" min="0" max="1" step="0.01" value="0.62" />
+              <output id="smoothnessValue" class="visually-hidden">0.62</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="recognition">Recognition</label>
+              <button class="knob" type="button" data-knob-for="recognition" aria-label="Adjust recognition">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="recognition" class="native-range" data-setting="recognition" type="range" min="0" max="1" step="0.01" value="0.74" />
+              <output id="recognitionValue" class="visually-hidden">0.74</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="contrast">Contrast</label>
+              <button class="knob" type="button" data-knob-for="contrast" aria-label="Adjust contrast">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="contrast" class="native-range" data-setting="contrast" type="range" min="0" max="2.5" step="0.01" value="1.35" />
+              <output id="contrastValue" class="visually-hidden">1.35</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="detailThreshold">Detail Thre.</label>
+              <button class="knob" type="button" data-knob-for="detailThreshold" aria-label="Adjust detail threshold">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="detailThreshold" class="native-range" data-setting="detailThreshold" type="range" min="0" max="0.8" step="0.01" value="0.18" />
+              <output id="detailThresholdValue" class="visually-hidden">0.18</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="contourDetail">Ctrl. Detail</label>
+              <button class="knob" type="button" data-knob-for="contourDetail" aria-label="Adjust contour detail">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="contourDetail" class="native-range" data-setting="contourDetail" type="range" min="0" max="1" step="0.01" value="0.58" />
+              <output id="contourDetailValue" class="visually-hidden">0.58</output>
+            </div>
+
+            <div class="setting knob-setting">
+              <label for="strokeWidth">Width</label>
+              <button class="knob" type="button" data-knob-for="strokeWidth" aria-label="Adjust stroke width">
+                <img class="knob-ticks-art" src="./assets/ui/knob-ticks.svg" alt="" aria-hidden="true" />
+                <img class="knob-face-art" src="./assets/ui/knob-face.svg" alt="" aria-hidden="true" />
+              </button>
+              <input id="strokeWidth" class="native-range" data-setting="strokeWidth" type="range" min="0.5" max="3.5" step="0.01" value="1.55" />
+              <output id="strokeWidthValue" class="visually-hidden">1.55</output>
+            </div>
+
+            <div class="controls-button-stack">
+              <button id="resetButton" class="svg-button svg-button-rect" type="button">
+                <img class="svg-button-shell default-shell" src="./assets/ui/button-rect.svg" alt="" aria-hidden="true" />
+                <img class="svg-button-shell active-shell" src="./assets/ui/button-rect-onclick.svg" alt="" aria-hidden="true" />
+                <span class="svg-button-label">RESET</span>
+              </button>
+              <button id="randomButton" class="svg-button svg-button-rect" type="button">
+                <img class="svg-button-shell default-shell" src="./assets/ui/button-rect.svg" alt="" aria-hidden="true" />
+                <img class="svg-button-shell active-shell" src="./assets/ui/button-rect-onclick.svg" alt="" aria-hidden="true" />
+                <span class="svg-button-label">RANDOM</span>
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <section class="module action-module">
+          <div class="toggle-column">
+            <label class="toggle-unit">
+              <span>ORIGINAL</span>
+              <input id="invert" data-setting="invert" class="lever-switch" type="checkbox" />
+              <button class="svg-toggle" type="button" data-toggle-for="invert" aria-label="Toggle invert">
+                <img class="toggle-image" src="./assets/ui/toggle-up.svg" alt="" aria-hidden="true" />
+              </button>
+              <span>INVERT</span>
+            </label>
+
+            <label class="toggle-unit">
+              <span>PNG</span>
+              <input id="formatToggle" class="lever-switch" type="checkbox" />
+              <button class="svg-toggle" type="button" data-toggle-for="formatToggle" aria-label="Toggle output format">
+                <img class="toggle-image" src="./assets/ui/toggle-up.svg" alt="" aria-hidden="true" />
+              </button>
+              <span>SVG</span>
+            </label>
+          </div>
+
+          <button id="printButton" class="svg-button svg-button-print print-button" type="button">
+            <img class="svg-button-shell default-shell" src="./assets/ui/button-print.svg" alt="" aria-hidden="true" />
+            <img class="svg-button-shell active-shell" src="./assets/ui/button-print-onclick.svg" alt="" aria-hidden="true" />
+            <span class="svg-button-label">PRINT</span>
+          </button>
+        </section>
+
+        <section class="module counter-module">
+          <div class="counter-display" aria-label="Download counter">
+            <img class="counter-frame-art" src="./assets/ui/counter-frame.svg" alt="" aria-hidden="true" />
+            <div class="counter-copy">
+              <span id="downloadCounter" class="counter-digits">000000</span>
+              <span class="counter-caption">prints</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="module preview-module">
+          <div class="screen-shell preview-screen">
+            <div class="screen-surface preview-surface">
+              <div id="previewStage" class="preview-stage" aria-live="polite"></div>
+            </div>
+            <img class="screen-frame frame-crt" src="./assets/ui/screen-crt-frame.svg" alt="" aria-hidden="true" />
+          </div>
+
+          <div class="effects-strip">
+            <label class="visually-hidden" for="effectMode">Effect bank</label>
+            <select id="effectMode" class="visually-hidden" data-setting="effectMode">
+              <option value="unknownPleasures">Unknown Pleasures</option>
+              <option value="knownPleasures">Known Pleasures</option>
+              <option value="oscilloscope">Groove</option>
+              <option value="ribbon">Fuzz</option>
+              <option value="lichtenstein">Atomize</option>
+              <option value="chaos">Chaos</option>
+            </select>
+
+            <div class="effect-bank" role="group" aria-label="Effect">
+              <button type="button" data-effect-option="unknownPleasures">
+                <span class="effect-jack"><img src="./assets/ui/jack.svg" alt="" aria-hidden="true" /></span>
+                <span class="effect-meta">
+                  <img class="effect-icon" src="./assets/ui/icon-unknown.svg" alt="" aria-hidden="true" />
+                  <span>UNKNOWN<br />PLEASURES</span>
+                </span>
+              </button>
+              <button type="button" data-effect-option="knownPleasures">
+                <span class="effect-jack"><img src="./assets/ui/jack.svg" alt="" aria-hidden="true" /></span>
+                <span class="effect-meta">
+                  <img class="effect-icon" src="./assets/ui/icon-known.svg" alt="" aria-hidden="true" />
+                  <span>KNOWN<br />PLEASURES</span>
+                </span>
+              </button>
+              <button type="button" data-effect-option="oscilloscope">
+                <span class="effect-jack"><img src="./assets/ui/jack.svg" alt="" aria-hidden="true" /></span>
+                <span class="effect-meta">
+                  <img class="effect-icon" src="./assets/ui/icon-groove.svg" alt="" aria-hidden="true" />
+                  <span>GROOVE</span>
+                </span>
+              </button>
+              <button type="button" data-effect-option="ribbon">
+                <span class="effect-jack"><img src="./assets/ui/jack.svg" alt="" aria-hidden="true" /></span>
+                <span class="effect-meta">
+                  <img class="effect-icon" src="./assets/ui/icon-fuzz.svg" alt="" aria-hidden="true" />
+                  <span>FUZZ</span>
+                </span>
+              </button>
+              <button type="button" data-effect-option="lichtenstein">
+                <span class="effect-jack"><img src="./assets/ui/jack.svg" alt="" aria-hidden="true" /></span>
+                <span class="effect-meta">
+                  <img class="effect-icon" src="./assets/ui/icon-atomize.svg" alt="" aria-hidden="true" />
+                  <span>ATOMIZE</span>
+                </span>
+              </button>
+              <button type="button" data-effect-option="chaos">
+                <span class="effect-jack"><img src="./assets/ui/jack.svg" alt="" aria-hidden="true" /></span>
+                <span class="effect-meta">
+                  <img class="effect-icon" src="./assets/ui/icon-chaos.svg" alt="" aria-hidden="true" />
+                  <span>CHAOS</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="module footer-module">
+          <div class="cable-dock">
+            <span id="effectSourceJack" class="source-jack" aria-hidden="true">
+              <img src="./assets/ui/jack.svg" alt="" aria-hidden="true" />
+            </span>
+          </div>
+
+          <div class="logo-mark" aria-hidden="true">
+            <div class="logo-orb-wrap">
+              <img class="logo-orb-art" src="./assets/ui/logo-orb.svg" alt="" aria-hidden="true" />
+              <img id="logoRotor" class="logo-rotor-art" src="./assets/ui/logo-rotor.svg" alt="" aria-hidden="true" />
+            </div>
+            <img class="logo-type-art" src="./assets/ui/logo-Oscilloscope.svg" alt="" aria-hidden="true" />
+          </div>
+
+          <p id="status" class="visually-hidden" aria-live="polite">Upload an image to begin.</p>
+        </section>
+      </section>
+    </main>
+
+    <canvas id="sampleCanvas" width="360" height="360" hidden></canvas>
+    <canvas id="exportCanvas" width="2048" height="2048" hidden></canvas>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
