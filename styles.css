@@ -30,7 +30,7 @@ body {
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
     var(--background);
-  background-size: 800px 800px, 800px 800px, auto;
+  background-size: 799px 799px, 799px 799px, auto;
   background-position:
     var(--grid-offset-x) var(--grid-offset-y),
     var(--grid-offset-x) var(--grid-offset-y),
