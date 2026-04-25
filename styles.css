@@ -75,6 +75,82 @@ button {
   place-items: center;
 }
 
+.mobile-notice {
+  display: none;
+  min-height: 100vh;
+  padding: 32px 24px;
+  background: #ffffff;
+  color: var(--ink);
+}
+
+.mobile-notice-inner {
+  min-height: calc(100vh - 64px);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 22px;
+  text-align: center;
+}
+
+.mobile-logo {
+  display: inline-grid;
+  grid-template-columns: 84px 48px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.mobile-logo-orb-wrap {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.mobile-logo-orb,
+.mobile-logo-rotor {
+  position: absolute;
+  inset: 0;
+}
+
+.mobile-logo-orb {
+  width: 84px;
+  height: 84px;
+}
+
+.mobile-logo-rotor {
+  width: 54px;
+  height: 46px;
+  left: 15px;
+  top: 19px;
+  transform-origin: 27px 23px;
+  animation: logo-spin 4.8s linear infinite;
+}
+
+.mobile-logo-type {
+  width: 48px;
+  height: 61px;
+}
+
+.mobile-notice h1,
+.mobile-notice p {
+  margin: 0;
+}
+
+.mobile-notice h1 {
+  max-width: 18ch;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+}
+
+.mobile-notice p {
+  max-width: 28ch;
+  font-size: 0.8rem;
+  line-height: 1.75;
+  letter-spacing: 0.05em;
+}
+
 .device-frame {
   position: relative;
   width: 800px;
@@ -853,5 +929,17 @@ button {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) and (pointer: coarse), (max-width: 720px) {
+  .app-shell,
+  #sampleCanvas,
+  #exportCanvas {
+    display: none !important;
+  }
+
+  .mobile-notice {
+    display: block;
   }
 }
